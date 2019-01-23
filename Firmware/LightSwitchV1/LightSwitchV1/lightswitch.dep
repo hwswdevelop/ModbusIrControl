@@ -1,0 +1,44 @@
+;	STMicroelectronics dependencies file
+
+[Version]
+Keyword=ST7Project
+Number=1.3
+
+[Root.Source Files.src\vtimer.c.Config.0]
+ExternDep= src\vtimer.c  "C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\Hstm8\modsl0.h"  src\stm8s_conf.h std_pheriph\inc\stm8s.h src\helper.h src\vtimer.h
+
+[Root.Source Files.src\ds18b20.c.Config.0]
+ExternDep= src\ds18b20.c  "C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\Hstm8\modsl0.h"  src\ds18b20.h std_pheriph\inc\stm8s.h src\stm8s_conf.h src\vtimer.h
+
+[Root.Source Files.src\button.c.Config.0]
+ExternDep= src\button.c  "C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\Hstm8\modsl0.h"  src\button.h std_pheriph\inc\stm8s.h src\stm8s_conf.h src\vtimer.h
+
+[Root.Source Files.src\eeprom.c.Config.0]
+ExternDep= src\eeprom.c  "C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\Hstm8\modsl0.h"  src\eeprom.h std_pheriph\inc\stm8s.h src\stm8s_conf.h src\crc.h
+
+[Root.Source Files.src\leds.c.Config.0]
+ExternDep= src\leds.c  "C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\Hstm8\modsl0.h"  src\leds.h std_pheriph\inc\stm8s.h src\stm8s_conf.h src\vtimer.h
+
+[Root.Source Files.src\clock.c.Config.0]
+ExternDep= src\clock.c  "C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\Hstm8\modsl0.h"  src\clock.h std_pheriph\inc\stm8s.h src\stm8s_conf.h
+
+[Root.Source Files.src\crc.c.Config.0]
+ExternDep= src\crc.c  "C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\Hstm8\modsl0.h" src\crc.h  std_pheriph\inc\stm8s.h src\stm8s_conf.h
+
+[Root.Source Files.src\helper.c.Config.0]
+ExternDep= src\helper.c  "C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\Hstm8\modsl0.h"  src\helper.h std_pheriph\inc\stm8s.h src\stm8s_conf.h
+
+[Root.Source Files.src\ir.c.Config.0]
+ExternDep= src\ir.c  "C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\Hstm8\modsl0.h" src\ir.h  std_pheriph\inc\stm8s.h src\stm8s_conf.h src\helper.h src\ds18b20.h  src\vtimer.h
+
+[Root.Source Files.src\main.c.Config.0]
+ExternDep= src\main.c  "C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\Hstm8\modsl0.h"  src\stm8s_conf.h std_pheriph\inc\stm8s.h src\clock.h src\modbus.h  src\modbus_serial.h src\ir.h src\leds.h src\eeprom.h src\crc.h src\helper.h  src\button.h src\ds18b20.h src\vtimer.h
+
+[Root.Source Files.src\modbus.c.Config.0]
+ExternDep= src\modbus.c  "C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\Hstm8\modsl0.h"  src\modbus.h src\modbus_serial.h std_pheriph\inc\stm8s.h src\stm8s_conf.h  src\helper.h src\leds.h src\eeprom.h src\crc.h src\button.h src\ir.h  src\ds18b20.h
+
+[Root.Source Files.src\modbus_serial.c.Config.0]
+ExternDep= src\modbus_serial.c  "C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\Hstm8\modsl0.h"  src\stm8s_conf.h src\modbus_serial.h std_pheriph\inc\stm8s.h  std_pheriph\inc\stm8s_uart1.h src\crc.h src\helper.h src\eeprom.h  src\vtimer.h
+
+[Root.Source Files.stm8_interrupt_vector.c.Config.0]
+ExternDep= stm8_interrupt_vector.c  "C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\Hstm8\modsl0.h"  std_pheriph\inc\stm8s.h src\stm8s_conf.h

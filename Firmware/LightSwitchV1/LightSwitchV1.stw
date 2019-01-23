@@ -1,0 +1,12 @@
+;	STMicroelectronics Workspace file
+
+[Version]
+Keyword=ST7Workspace-V0.7
+
+[Project0]
+Filename=lightswitchv1\lightswitch.stp
+Dependencies=
+[Options]
+ActiveProject=lightswitch
+ActiveConfig=Debug
+AddSortedElements=0
