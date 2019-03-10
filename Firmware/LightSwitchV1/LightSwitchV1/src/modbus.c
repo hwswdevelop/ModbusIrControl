@@ -2,7 +2,7 @@
  * 
  * Copyright (c) 2016-2018 Evgeny Sobolev
  * Contact:
- *	e-mail: evgeny@vrnnet.ru, hwswdevelop@gmail.com
+ *	e-mail: evgeny@vrnnet.ru
  *  skype:  evgenysbl
  *  tel.:   +7(908)1375847
  */
@@ -25,26 +25,30 @@ void modbusException(uint8_t *data, uint8_t code);
 #define INPUT_COUNT								( BUTTONS_COUNT )
 
 #define MAX_HOLDING_COUNT 				( 0x07D )
-#define HOLDING_COUNT							( 22 )
+#define HOLDING_COUNT							( 25 )
 
 #define REG_ADDR_MODBUS_ID				(0x00)
 #define REG_ADDR_MODBUS_MODE			(0x01)
 #define REG_ADDR_MODBUS_BAUD			(0x02)
 #define REG_ADDR_MODBUS_PARITY		(0x03)
-#define REG_ADDR_MODBUS_SAVE			(0x04)
-#define REG_ADDR_BUTTONS_STATE		(0x05)
-#define REG_ADDR_BUTTONS_PUSH			(0x06)
-#define REG_ADDR_BUTTONS_PULL			(0x07)
-#define REG_ADDR_BUTTON1_TIME			(0x08)
-#define REG_ADDR_BUTTON2_TIME			(0x09)
-#define REG_ADDR_BUTTON3_TIME			(0x0A)
-#define REG_ADDR_TEMP							(0x0B)
-#define REG_ADDR_LEDS							(0x0C)
-#define REG_ADDR_IR_LEN						(0x0D)
-#define REG_ADDR_IR_PULSE					(0x0E)
-#define REG_ADDR_IR_PAUSE					(0x0F)
-#define REG_ADDR_IR_DATA_FIRST		(0x10)
-#define REG_ADDR_IR_DATA_LAST			(0x15)
+#define REG_ADDR_MODBUS_STOP			(0x04)
+#define REG_ADDR_MODBUS_SAVE			(0x05)
+#define REG_ADDR_BUTTONS_STATE		(0x06)
+#define REG_ADDR_BUTTONS_PUSH			(0x07)
+#define REG_ADDR_BUTTONS_PULL			(0x08)
+#define REG_ADDR_BUTTON1_TIME			(0x09)
+#define REG_ADDR_BUTTON2_TIME			(0x0A)
+#define REG_ADDR_BUTTON3_TIME			(0x0B)
+#define REG_ADDR_TEMP							(0x0C)
+#define REG_ADDR_TEMP_C1					(0x0D)
+#define REG_ADDR_TEMP_C2					(0x0E)
+#define REG_ADDR_LEDS							(0x0F)
+#define REG_ADDR_IR_LEN						(0x10)
+#define REG_ADDR_IR_PULSE					(0x11)
+#define REG_ADDR_IR_PAUSE					(0x12)
+#define REG_ADDR_IR_DATA_FIRST		(0x13)
+#define REG_ADDR_IR_DATA_LAST			(0x18)
+
 
 #define MODBUS_CONFIG_SAVE_VAL		(0xA251)
 
@@ -166,6 +170,7 @@ uint8_t readReg(const uint8_t addr, uint16_t *value){
 			case REG_ADDR_MODBUS_MODE: 		*value = gModbusConfig.mode;   break;
 			case REG_ADDR_MODBUS_BAUD: 		*value = gModbusConfig.baud;   break;
 			case REG_ADDR_MODBUS_PARITY: 	*value = gModbusConfig.parity; break;
+			case REG_ADDR_MODBUS_STOP: 		*value = gModbusConfig.stopBitsWhenNoParity; break;
 			case REG_ADDR_MODBUS_SAVE: 		*value = 0; break;
 			
 			// Buttons
@@ -203,7 +208,9 @@ uint8_t readReg(const uint8_t addr, uint16_t *value){
 			break;
 			
 			case REG_ADDR_TEMP: *value = ds18b20GetTemp(); break;
-			
+			case REG_ADDR_TEMP_C1: *value =	ds18b20GetTempC(0); break;
+			case REG_ADDR_TEMP_C2: *value =	ds18b20GetTempC(1); break;
+						
 			case REG_ADDR_LEDS:
 			{
 				// Leds enable/disable
@@ -273,6 +280,13 @@ uint8_t writeReg(const uint8_t addr, const uint16_t value){
 					rs485_init(&gModbusConfig);
 				} else res = MODBUS_ILLEGAL_DATA_VALUE;
 			break;
+			
+			case REG_ADDR_MODBUS_STOP:
+				 if (value >= RS485_STOP_BITS_ONE && value <= RS485_STOP_BITS_TWO){
+					gModbusConfig.stopBitsWhenNoParity = value;
+					rs485_init(&gModbusConfig);
+				} else res = MODBUS_ILLEGAL_DATA_VALUE;
+			break;			
 						
 			case REG_ADDR_MODBUS_SAVE:
 				if (value == MODBUS_CONFIG_SAVE_VAL){
@@ -307,6 +321,8 @@ uint8_t writeReg(const uint8_t addr, const uint16_t value){
 			break;
 			
 			case REG_ADDR_TEMP:
+			case REG_ADDR_TEMP_C1:
+			case REG_ADDR_TEMP_C2:
 			// Temperature
 			break;
 			

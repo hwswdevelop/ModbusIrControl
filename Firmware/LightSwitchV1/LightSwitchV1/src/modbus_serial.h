@@ -2,7 +2,7 @@
  * 
  * Copyright (c) 2016-2018 Evgeny Sobolev
  * Contact:
- *	e-mail: evgeny@vrnnet.ru, hwswdevelop@gmail.com
+ *	e-mail: evgeny@vrnnet.ru
  *  skype:  evgenysbl
  *  tel.:   +7(908)1375847
  */
@@ -33,11 +33,17 @@ typedef enum _MODBUS_MODE {
   MODBUS_MODE_RTU   = 1
 } MODBUS_MODE, *pMODBUS_MODE;
 
+typedef enum _RS485_STOP_BITS {
+	RS485_STOP_BITS_ONE = 1,
+	RS485_STOP_BITS_TWO = 2
+} RS485_STOP_BITS, *pRS485_STOP_BITS;
+
 typedef struct _MODBUS_CONFIG {
 	 uint8_t							id;
    MODBUS_MODE          mode;
    RS485_BAUD           baud;
-   RS485_PARITY         parity;    
+   RS485_PARITY         parity;
+	 RS485_STOP_BITS			stopBitsWhenNoParity;
 } MODBUS_CONFIG, *pMODBUS_CONFIG;
 
 

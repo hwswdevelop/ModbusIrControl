@@ -2,7 +2,7 @@
  * 
  * Copyright (c) 2016-2018 Evgeny Sobolev
  * Contact:
- *	e-mail: evgeny@vrnnet.ru, hwswdevelop@gmail.com
+ *	e-mail: evgeny@vrnnet.ru
  *  skype:  evgenysbl
  *  tel.:   +7(908)1375847
  */
@@ -59,6 +59,15 @@ void irq_prio_init(void){
 	ITC->ISPR7 = 0x00;
 }
 
+
+void do_nothing(void){
+ static volatile val = 1;
+ if (val == 1) 
+		val = 0;
+ else
+		val = 1;
+}
+
 /*********************************************************
  * Reset to default settings
  *********************************************************/
@@ -73,12 +82,13 @@ uint8_t check_reset(void){
 	GPIOC->DDR = ( 1 << 5 );
   GPIOC->CR1 = ( 0x07 << 4 );
   GPIOC->CR2 = ( 0 << 4 );
+	for(wait = 0; wait < 100; wait++) do_nothing();
 	for(count = 0; count < 16; count++){
 		GPIOC->ODR = (1 << 5);
-		for(wait = 0; wait < 16; wait++);
+		for(wait = 0; wait < 100; wait++) do_nothing();
 		if ( ( (GPIOC->IDR >> 4) & 0x05 ) != 0x05 ) return 0;
 		GPIOC->ODR = (0 << 5);
-		for(wait = 0; wait < 16; wait++);
+		for(wait = 0; wait < 100; wait++) do_nothing();
 		if ( ( (GPIOC->IDR >> 4) & 0x05 ) != 0x00 ) return 0;		
 	}
 	return 1;

@@ -2,7 +2,7 @@
  * 
  * Copyright (c) 2016-2018 Evgeny Sobolev
  * Contact:
- *	e-mail: evgeny@vrnnet.ru, hwswdevelop@gmail.com
+ *	e-mail: evgeny@vrnnet.ru
  *  skype:  evgenysbl
  *  tel.:   +7(908)1375847
  */

@@ -2,7 +2,7 @@
  * 
  * Copyright (c) 2016-2018 Evgeny Sobolev
  * Contact:
- *	e-mail: evgeny@vrnnet.ru, hwswdevelop@gmail.com
+ *	e-mail: evgeny@vrnnet.ru
  *  skype:  evgenysbl
  *  tel.:   +7(908)1375847
  */
@@ -45,6 +45,7 @@
 
 
 typedef struct {
+	float					tempC;
 	uint16_t			temp;
 } DS18B20_STATE, *pDS18B20_STATE;
 
@@ -60,6 +61,7 @@ void ds18b20WaitUs(uint16_t time);
 
 void ds18b20Init(void){
 	gDS18B20ST.temp = 0x5555;
+	gDS18B20ST.tempC = 22.4567; gDS18B20ST.temp * 0.0625;
 }
 
 void ds18b20PulseLow(void){
@@ -198,6 +200,8 @@ uint8_t ds18b20getTemp(uint16_t *temp){
 
 void ds18b20ReadTemp(void){
 	uint16_t temp;
+	int16_t  tempSign;
+	float    tempC;
 	// Now I can't disable interrupts, because of other tasks
 	// Try to read temperature, timings can be wrong....
 	if ( ds18b20getTemp(&temp) ){
@@ -218,11 +222,25 @@ void ds18b20ReadTemp(void){
 		}
 	} else return;
   // Update temperature value
+	
+	tempSign = (int16_t)temp;
+	tempC = tempSign * 0.0625;
+	
 	disableInterrupts();
 	gDS18B20ST.temp = temp;
+	gDS18B20ST.tempC = tempC;
 	enableInterrupts();
 }
 
+uint16_t ds18b20GetTempC(uint8_t high){
+	uint16_t result;
+	if (high){
+		result = ((uint16_t*)(&gDS18B20ST.tempC))[1];
+	} else {
+		result = ((uint16_t*)(&gDS18B20ST.tempC))[0];
+	}	
+	return result;
+}
 
 uint16_t ds18b20GetTemp(void){
 	return gDS18B20ST.temp;

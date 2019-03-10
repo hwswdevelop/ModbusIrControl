@@ -2,7 +2,7 @@
  * 
  * Copyright (c) 2016-2018 Evgeny Sobolev
  * Contact:
- *	e-mail: evgeny@vrnnet.ru, hwswdevelop@gmail.com
+ *	e-mail: evgeny@vrnnet.ru
  *  skype:  evgenysbl
  *  tel.:   +7(908)1375847
  */
@@ -90,7 +90,8 @@ static const MODBUS_CONFIG gModbusDefaultConfig = {
 	1,
 	MODBUS_MODE_RTU,
 	RS485_BAUD_115200,
-	RS485_NO_PARITY		
+	RS485_NO_PARITY,
+	RS485_STOP_BITS_TWO
 };
 
 MODBUS_CONFIG gModbusConfig;
@@ -140,7 +141,16 @@ RS485_ERROR rs485_init(pMODBUS_CONFIG pCfg){
   // Calculate CR parity values
 	if (pCfg->mode == MODBUS_MODE_RTU) {
 			switch(pCfg->parity){
-				case RS485_NO_PARITY:  cr1 = 0; cr3 = (2 << 4); break; // 2 stop bits, no parity
+				case RS485_NO_PARITY:
+				{ 
+					cr1 = 0;
+					if (pCfg->stopBitsWhenNoParity == RS485_STOP_BITS_TWO){
+						cr3 = (2 << 4);
+					} else {
+						cr3 = 0;
+					}
+				}				
+				break; // 2 stop bits, no parity
 				case RS485_EVEN:       cr1 = (1 << 4) | (1 << 2) | (0 << 1); cr3 = 0; break;
 				case RS485_ODD:        cr1 = (1 << 4) | (1 << 2) | (1 << 1); cr3 = 0; break;
 			default:
@@ -189,7 +199,8 @@ void saveSerialConfig(void){
 	eepromWrite( (uint8_t*)EEPROM_ADDR_MODBUS_MODE, gModbusConfig.mode);
 	eepromWrite( (uint8_t*)EEPROM_ADDR_MODBUS_BAUD, gModbusConfig.baud);
 	eepromWrite( (uint8_t*)EEPROM_ADDR_MODBUS_PARITY, gModbusConfig.parity);
-  crc = rtuCRC((uint8_t*)EEPROM_ADDR_MODBUS_ID, 4);
+	eepromWrite( (uint8_t*)EEPROM_ADDR_MODBUS_STOP, gModbusConfig.stopBitsWhenNoParity);
+  crc = rtuCRC((uint8_t*)EEPROM_ADDR_MODBUS_ID, EEPROM_STORAGE_SIZE);
 	eepromWrite( (uint8_t*)EEPROM_ADDR_MODBUS_CRCL, (crc & 0xFF));
 	eepromWrite( (uint8_t*)EEPROM_ADDR_MODBUS_CRCH, (crc >> 8));	
 }
@@ -201,13 +212,14 @@ void saveDefaultSerialConfig(void){
 
 
 void loadSerialConfig(void){
-  uint16_t crc = rtuCRC((uint8_t*)EEPROM_ADDR_MODBUS_ID, 4);
+  uint16_t crc = rtuCRC((uint8_t*)EEPROM_ADDR_MODBUS_ID, EEPROM_STORAGE_SIZE);
 	uint16_t rdCRC = LE16(EEPROM_ADDR_MODBUS_CRCL);
 	if (crc == rdCRC){
 		gModbusConfig.id     = *(uint8_t*)			EEPROM_ADDR_MODBUS_ID;
 		gModbusConfig.mode   = *(pMODBUS_MODE) 	EEPROM_ADDR_MODBUS_MODE;
 		gModbusConfig.baud   = *(pRS485_BAUD)  	EEPROM_ADDR_MODBUS_BAUD;
 		gModbusConfig.parity = *(pRS485_PARITY)	EEPROM_ADDR_MODBUS_PARITY;
+		gModbusConfig.stopBitsWhenNoParity = *(pRS485_STOP_BITS) EEPROM_ADDR_MODBUS_STOP;
 	} else {
 		saveDefaultSerialConfig();
 	}
